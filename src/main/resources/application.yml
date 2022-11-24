@@ -1,0 +1,6 @@
+spring:
+  thymeleaf:
+    cache: false # 去除缓存
+
+server:
+  port: 8092

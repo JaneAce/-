@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<script src="/assets/js/jquery.js"></script>
+<body>
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>审核信息</legend>
+    </fieldset>
+
+    <form class="layui-form layui-form-pane" action="">
+
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">时间段</label>
+            <div class="layui-input-block" >
+                <input type="radio" name="clock_time_type" value="早上" title="早上" required>
+                <input type="radio" name="clock_time_type" value="中午" title="中午" required>
+                <input type="radio" name="clock_time_type" value="晚上" title="晚上" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">位置</label>
+            <div class="layui-input-block">
+                <input id="clock_area" type="text" name="clock_area" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">温度</label>
+            <div class="layui-input-inline">
+                <input id="temperature" type="text" name="temperature" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">咳嗽</label>
+            <div class="layui-input-block">
+                <input type="radio" name="cough" value="有" title="有" required>
+                <input type="radio" name="cough" value="无" title="无" required>
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">发烧</label>
+            <div class="layui-input-block">
+                <input type="radio" name="fever" value="有" title="有" required>
+                <input type="radio" name="fever" value="无" title="无" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button type="button" lay-submit="" lay-filter="user-add-save" id="user-add-save" class="layui-btn">
+                确认
+            </button>
+        </div>
+    </form>
+
+
+        </div>
+
+</div>
+<script src="/layui/layui.all.js"></script>
+
+<script>
+    $(function() {
+        $.ajax({
+            async : "false",
+            url : "http://api.map.baidu.com/location/ip?ak=6VHZGgsWF3GE3V1lGgjrO0efCQ9VcOdm",
+            type : "GET",
+            dataType : "jsonp",
+            jsonpCallback : "showLocation",
+            contentType : "application/json;utf-8",
+            success : function(data) {
+                var a=JSON.stringify(data.content.address);
+                var reg = new RegExp("\"","g");
+                var address=a.replace(reg,"");
+                console.log(address);
+                layui.use('form', function () {
+                    var form = layui.form;
+                    $('#clock_area').val(address);
+                    form.render()
+                });
+            },
+            error : function(data) {
+                alert(data);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

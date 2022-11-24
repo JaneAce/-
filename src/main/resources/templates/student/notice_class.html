@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Title</title>
+</head>
+<body>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-form-item layui-input-inline" id="btn">
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <input  id="search" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            </div>
+            <button type="button" class="layui-btn" data-type="reload">搜索</button>
+        </div>
+    </div>
+</script>
+
+<script th:inline="none">
+    layui.use('table', function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.$
+        const tableIns = table.render({
+            elem: '#test'
+            ,id:'test'
+            ,url:'/student/notice_class/personPage'
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,title: '个人核酸信息表'
+            ,data:'Nucleic'
+            // , page: true //开启分页
+            ,parseData:function (res){
+                console.log(res);
+                return{"code":res.code,
+                    "msg":res.msg,
+                    "count": res.count,
+                    "data":res.data,
+                }
+            }
+            ,cols: [[
+                {field:'userid', title:'ID', minWidth:80, fixed: 'left', unresize: true, sort: true}
+                ,{field:'username', event:'detail', title:'姓名', minWidth:120}
+                ,{field:'ndate', title:'日期', minWidth:150,event: 'detail'}
+                ,{field:'nresult', title:'结果', minWidth:80,event: 'detail'}
+                ,{field:'nimage', title:'核酸图片', minWidth:100,event: 'detail'}
+            ]]
+            ,page: true
+        });
+
+        // table.on('tool(test)', function(obj){
+        //     var data = obj.data;
+        //     console.log(data.notice_title)
+        //     if(obj.event === 'detail'){
+        //         layer.open({
+        //             type:2,
+        //             content:'notice_detail.html',
+        //             area: ['700px', '500px'],
+        //             anim:3 ,
+        //             success: function (layero, index) {
+        //                 render_form(layero, index, data)
+        //             }
+        //         });
+        //     }
+        //     function render_form(layero, index, data) {
+        //         const body = layer.getChildFrame('body' , index);
+        //         body.find('#username').val(data.NDate);
+        //         body.find('#NResult').val(data.NResult);
+        //         body.find('#NImage').val(data.NImage);
+        //         body.find('#NDate').val(data.NDate);
+        //
+        //     }
+        // });
+
+        //搜索
+        var $ = layui.$, active = {
+            reload: function(){
+                var search = $('#search');
+                console.log("search"+search.val());
+                //执行重载
+                layui.table.reload('test', {
+                    url:'/ntc/search/class'
+                    ,response: {
+                        statusName: 'code' //规定数据状态的字段名称，默认：code
+                        ,statusCode: 200 //规定成功的状态码，默认：0
+                    }
+                    ,where: {
+                        search: search.val(),
+                    }
+                },'data');
+            }
+        };
+        $('body').on('click', '#btn .layui-btn', function() {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>

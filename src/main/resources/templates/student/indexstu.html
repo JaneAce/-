@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>学生</title>
+
+    <!-- favicon -->
+    <link rel="icon" href="/assets/img/favicon.png" sizes="16x16" type="image/png" />
+
+    <!-- Stylesheet Link -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+
+<body class="t-bg-primary mx-sidenav-not-collapsed">
+
+    <!-- Preloader  -->
+    <div class="preloader-container">
+        <div class="cssload-thecube m-auto">
+            <div class="cssload-cube cssload-c1"></div>
+            <div class="cssload-cube cssload-c2"></div>
+            <div class="cssload-cube cssload-c4"></div>
+            <div class="cssload-cube cssload-c3"></div>
+        </div>
+    </div>
+    <!-- Preloader End -->
+
+    <!-- Side Nav / Display Only Small Screen  -->
+    <div class="position-relative d-xl-none">
+        <div class="mx-mobile-nav-wrapper"></div>
+        <div class="mx-mobile-nav">
+            <div class="mx-mobile-nav__close">
+                <i class="las la-times"></i>
+            </div>
+            <div class="mx-mobile-brand mx-mobile-nav__brand ">
+                <img src="/assets/img/logo-w.png" alt="Adminage" class="img-fluid mx-mobile-brand__is">
+            </div>
+            <nav class="mx-mobile-nav__menu" data-simplebar>
+                <ul class="t-list mx-sm-sidenav">
+                    <li class="mx-sm-sidenav__list">
+                        <a href="#" class="mx-sm-sidenav__link">
+                            <span class="mx-sm-sidenav__icon t-mr-8">
+                                <i class='bx bx-category'></i>
+                            </span>
+                            <span class="mx-sm-sidenav__text text-capitalize" onclick="dj('/student/personalinfo.html')">
+                                个人信息
+                            </span>
+                        </a>
+                    </li>
+                    <li class="mx-sm-sidenav__list mx-sidenav__has-sub" >
+                        <a href="#" class="mx-sm-sidenav__link">
+                            <span class="mx-sm-sidenav__icon t-mr-8">
+                                <i class='bx bx-category'></i>
+                            </span>
+                            <span class="mx-sm-sidenav__text text-capitalize">
+                                通知
+                            </span>
+                        </a>
+                        <ul class="t-list mx-sidenav__sub mx-sidenav__sub--hide">
+                            <li class="mx-sidenav__sub-item">
+                                <a href="#" class="mx-sidenav__sub-link active-page">
+                                    <span class="mx-sidenav__sub-icon t-mr-15">
+                                        <i class='bx bx-news'></i>
+                                    </span>
+                                    <span class="mx-sidenav__sub-text text-capitalize" onclick="dj('/student/notice.html')">
+                                        通知公告
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="mx-sidenav__sub-item">
+                                <a href="#" class="mx-sidenav__sub-link "onclick="dj('/student/notice_class.html')">
+                                    <span class="mx-sidenav__sub-icon t-mr-15">
+                                        <i class='bx bx-task'></i>
+                                    </span>
+                                    <span class="mx-sidenav__sub-text text-capitalize">
+                                        班级通知
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mx-sm-sidenav__list">
+                        <a href="#" class="mx-sm-sidenav__link">
+                            <span class="mx-sm-sidenav__icon t-mr-8">
+                                <i class='bx bx-category'></i>
+                            </span>
+                            <span class="mx-sm-sidenav__text text-capitalize" onclick="dj('leave_apply_management.html')">
+                                离校申请
+                            </span>
+                        </a>
+                    </li>
+                    <li class="mx-sm-sidenav__list">
+                        <a href="#" class="mx-sm-sidenav__link">
+                            <span class="mx-sm-sidenav__icon t-mr-8">
+                                <i class='bx bx-category'></i>
+                            </span>
+                            <span class="mx-sm-sidenav__text text-capitalize" onclick="dj('/student/report.html')">
+                                核酸打卡
+                            </span>
+                        </a>
+                    </li>
+                    <li class="mx-sm-sidenav__list">
+                        <a href="#" class="mx-sm-sidenav__link">
+                            <span class="mx-sm-sidenav__icon t-mr-8">
+                                <i class='bx bx-category'></i>
+                            </span>
+                            <span class="mx-sm-sidenav__text text-capitalize" onclick="dj('/student/epidemic.html')">
+                                疫情信息
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- Side Nav / Display Only Small Screen  End-->
+
+    <!-- Page Wrapper -->
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!--SideNav / Display Only Small Screen  -->
+            <div class="col-12 d-xl-none">
+                <header class="mx-mobile-header t-bg-primary ">
+                    <div class="container-fluid px-3">
+                        <div class="row g-3">
+                            <div class="col-6 align-self-center">
+                                <div class="mx-mobile-brand">
+                                    <img src="/assets/img/logo-w.png" alt="Adminage"
+                                         class="img-fluid mx-mobile-brand__is">
+                                </div>
+                            </div>
+                            <div class="col-6 align-self-center">
+                                <nav class="mx-mobile-option">
+                                    <ul class="t-list mx-mobile-menu justify-content-end">
+                                        <li class="mx-mobile-menu__item">
+                                            <a href="#" class="mx-mobile-menu__link mx-sm-sidenav-toggle">
+                                                <i class='bx bx-menu-alt-right d-block'></i>
+                                            </a>
+                                        </li>
+                                        <li class="mx-mobile-menu__item mx-mobile-menu__user">
+                                            <a href="#" class="mx-mobile-menu__link">
+                                                <i class='bx bxs-user-circle d-block'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+<!--                                    小屏右上角用户-->
+                                    <div class="mx-sm-user">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <ul class="t-list mx-sm-sidenav">
+                                                        <li class="mx-sm-sidenav__list">
+                                                            <a href="#" class="mx-sm-sidenav__link">
+                                                                <span class="mx-sm-sidenav__icon t-mr-8">
+                                                                    <i class='bx bx-log-out-circle'></i>
+                                                                </span>
+                                                                <span class="mx-sm-sidenav__text text-capitalize" href="/src/main/resources/templates/login.html">
+                                                                    退出
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                </header>
+            </div>
+            <!--HSideNav/ Display Only Small Screen End -->
+
+            <!--SideNav / Display Only Large Screen  -->
+            <div class="col-3 col-xxl-2 mx-sidenav d-none d-xl-block">
+                <!-- Side Nav  -->
+                <div class="mx-sidenav__content t-bg-primary">
+                    <!-- Side Nav Brand  -->
+                    <div class="mx-sidenav__brand">
+                        <a href="indexadmin.html" class="mx-sidenav__logo t-link">
+                            <img src="/assets/img/logo-w.png" alt="Adminage" class="img-fluid mx-sidenav__logo-is">
+                        </a>
+                        <a href="indexadmin.html" class="t-link mx-sidenav__logo-sm">
+                            <img src="/assets/img/logo-w-sm.png" alt="Adminage" class="img-fluid mx-sidenav__logo-sm-is">
+                        </a>
+                    </div>
+                    <!-- Side Nav Brand  End-->
+                    <div class="mx-sidenav__menu-container">
+                        <nav class="mx-sidenav__menu">
+                            <ul class="t-list mx-sidenav__menu-is" id="ul">
+                                <li class="mx-sidenav__menu-item" id="2" onclick="dj('/student/personalinfo.html')">
+                                    <a href="#" class="mx-sidenav__menu-link">
+                                        <span class="mx-sidenav__menu-icon t-mr-15">
+                                            <i class='bx bx-category'></i>
+                                        </span>
+                                        <span class="mx-sidenav__menu-text text-capitalize">
+                                            个人信息
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="mx-sidenav__menu-item mx-sidenav__has-sub">
+                                    <a href="#" class="mx-sidenav__menu-link">
+                                        <span class="mx-sidenav__menu-icon t-mr-15">
+                                            <i class='bx bx-category'></i>
+                                        </span>
+                                        <span class="mx-sidenav__menu-text text-capitalize" >
+                                            通知
+                                        </span>
+                                    </a>
+                                    <ul class="t-list mx-sidenav__sub mx-sidenav__sub--hide">
+                                        <li class="mx-sidenav__sub-item">
+                                            <a href="#" class="mx-sidenav__sub-link " onclick="dj('/student/notice_class.html')">
+                                                <span class="mx-sidenav__sub-icon t-mr-15">
+                                                    <i class='bx bx-task'></i>
+                                                </span>
+                                                <span class="mx-sidenav__sub-text text-capitalize">
+                                                    班级通知
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="mx-sidenav__menu-item" id="7" onclick="dj('/student/clock_add.html')">
+                                    <a href="#" class="mx-sidenav__menu-link">
+                                        <span class="mx-sidenav__menu-icon t-mr-15">
+                                            <i class='bx bx-category'></i>
+                                        </span>
+                                        <span class="mx-sidenav__menu-text text-capitalize" >
+                                            健康打卡
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="mx-sidenav__menu-item" id="8" onclick="dj('/student/report.html')">
+                                    <a href="#" class="mx-sidenav__menu-link">
+                                        <span class="mx-sidenav__menu-icon t-mr-15">
+                                            <i class='bx bx-category'></i>
+                                        </span>
+                                        <span class="mx-sidenav__menu-text text-capitalize" >
+                                            核酸报告
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="mx-sidenav__menu-item" id="9" onclick="dj('/student/epidemic.html')">
+                                    <a href="#" class="mx-sidenav__menu-link">
+                                        <span class="mx-sidenav__menu-icon t-mr-15">
+                                            <i class='bx bx-category'></i>
+                                        </span>
+                                        <span class="mx-sidenav__menu-text text-capitalize" >
+                                            疫情信息
+                                        </span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!-- Side Nav End -->
+            </div>
+            <!--SideNav / Display Only Large Screen End -->
+
+            <div class="col-9 col-xxl-10 flex-grow-1">
+                <div class="container-fluid px-2 px-xxl-0">
+                    <div class="row g-2 g-xxl-0">
+                        <div class="col-12">
+                            <div class="mx-body">
+
+                                <header class="header sticky-top d-none d-xl-block">
+                                    <div class="primary-nav t-bg-primary">
+                                        <div class="container-fluid px-0">
+                                            <div class="row g-0">
+                                                <div class="col-lg-12">
+                                                    <div class="primary-nav-list--right-wrapper">
+                                                        <ul class="t-list primary-nav-list primary-nav-list--right">
+                                                            <li
+                                                                class="primary-nav-list__item border-bottom-0 d-none d-lg-block t-line-1 ">
+                                                                <a href="#" class="t-link mx-sidenav-toggle">
+                                                                    <span class="mx-sidenav-toggle__icon"></span>
+                                                                </a>
+                                                            </li>
+                                                           <!--   大屏右上角用户-->
+                                                            <li class="primary-nav-list__item ms-auto border-bottom-0 ">
+                                                                <div class="dropdown">
+                                                                    <a href="#" aria-expanded="false"
+                                                                        data-toggle="dropdown"
+                                                                        class="t-link w-100 primary-nav-list__link primary-nav-list__link-has-menu text-capitalize ">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <span class="mx-user mx-user--sm">
+                                                                                <img src="/assets/img/user.jpg" alt="max"
+                                                                                     class="img-fluid w-100" />
+                                                                            </span>
+                                                                            <span class="d-none d-lg-inline-block t-ml-8">
+                                                                                欢迎你,<span th:text="${msg.username}"></span>
+                                                                                <span class="t-ml-5 d-inline-block xsm-text" data-feather="chevron-down"></span>
+                                                                            </span>
+                                                                        </div>
+                                                                    </a>
+                                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                                        <ul class="t-list mx-author-menu">
+
+                                                                            <li class="mx-author-menu__list">
+                                                                                <a href="#"
+                                                                                    class="mx-author-menu__link text-capitalize">
+                                                                                    <div
+                                                                                        class="d-flex align-items-center">
+                                                                                        <span
+                                                                                            class="xxlg-text t-mr-8 d-inline-block t-line-1">
+                                                                                            <i class='bx bx-log-out-circle'></i>
+                                                                                        </span>
+                                                                                        <span
+                                                                                            class="d-inline-block t-line-1 sm-text" >
+                                                                                            退出
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="pagination t-bg-16">
+                                        <div class="container-fluid px-0">
+                                            <div class="row g-0">
+                                                <div class="col-12">
+                                                    <ul class="pagination-bar t-list">
+                                                        <li class="pagination-bar__list">
+                                                            <a href="#"
+                                                                class="t-link pagination-bar__link text-capitalize">
+                                                                首页
+                                                            </a>
+                                                        </li>
+                                                        <li class="pagination-bar__list">
+                                                            <a href="#"
+                                                                class="t-link pagination-bar__link text-capitalize">
+                                                                首页
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="mx-body__content" data-simplebar>
+                                        <h1></h1>
+                                    <iframe id="iframe" src="" style="width: 100%;height: 670px">
+                                    </iframe>
+                                    <footer class="t-mb-30">
+                                        <div class="container-fluid px-3">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <div
+                                                        class="t-pt-15 t-pb-15 cards t-bg-white t-shadow text-center sm-text">
+                                                        <span class="t-text-dark">&copy;</span> <a href="#"
+                                                            class="t-link t-link--alpha text-capitalize">疫情管理系统</a>
+                                                        <span class="t-text-dark text-capitalize">all right By <a href="">DC.</a> 2022</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </footer>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page Wrapper End -->
+
+    <!-- jquery -->
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/jquery-ui.min.js"></script>
+
+    <!-- Date and Time  -->
+    <script src="/assets/js/moment.js"></script>
+    <script src="/assets/js/bootstrap-material-datetimepicker.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Slick Slider  -->
+    <script src="/assets/js/slick.min.js"></script>
+    <!-- Owl carousel -->
+    <script src="/assets/js/owl.carousel.min.js"></script>
+    <!-- simplebar -->
+    <script src="/assets/js/simplebar.js"></script>
+    <!-- Prism JS  -->
+    <script src="/assets/js/prism.js"></script>
+    <!-- Feather Icon  -->
+    <script src="/assets/js/feather.js"></script>
+    <!-- Nice Select  -->
+    <script src="/assets/js/jquery.nice-select.min.js"></script>
+    <!-- Dropzone  -->
+    <script src="/assets/js/dropzone.js"></script>
+    <!-- ION Range Slider  -->
+    <script src="/assets/js/ion.rangeSlider.js"></script>
+    <!-- Touchspin  -->
+    <script src="/assets/js/jquery.bootstrap-touchspin.min.js"></script>
+    <!-- Rating Bar -->
+    <script src="/assets/js/jquery.barrating.min.js"></script>
+    <!-- Calendar  -->
+    <script src="/assets/js/fullcalendar.min.js"></script>
+    <script src="/assets/js/main.js"></script>
+<script th:inline="javascript">
+    var user=[[${msg}]]
+    console.log(user)
+    localStorage.setItem("user",user.username)
+    function dj(data) {
+        console.log(data)
+            $("#iframe").attr("src",data);
+    }
+
+</script>
+</body>
+
+</html>

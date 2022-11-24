@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Title</title>
+</head>
+<body>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-input-inline layui-form-item" id="add">
+        <div class="layui-inline">
+                <button type="button" class="layui-btn" lay-event="add">添加</button>
+        </div>
+    </div>
+</script>
+
+<!--<script type="text/html" id="barDemo">-->
+<!--    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="verify">审核</a>-->
+<!--    &lt;!&ndash;    //删除按钮&ndash;&gt;-->
+<!--    <a class=" layui-btn-sm" style="cursor: pointer" lay-event="del" >-->
+<!--        <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #979494;"></i>-->
+<!--    </a>-->
+
+<!--</script>-->
+
+<script th:inline="none">
+    layui.use('table', function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.$
+        const tableIns = table.render({
+            elem: '#test'
+            ,id:'test'
+            ,url:'/clock/stu/select'
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,response: {
+                statusName: 'code' //规定数据状态的字段名称，默认：code
+                ,statusCode: 200 //规定成功的状态码，默认：0
+            }
+            ,title: '打卡信息'
+
+            ,cols: [[
+                {field:'clock_id', title:'clock_id', minWidth:30, hide:true,fixed: 'left', unresize: true, sort: true}
+                ,{field:'user_id', title:'ID',unresize: true, minWidth:120}
+                ,{field:'user_name', title:'姓名',unresize: true, minWidth:150}
+                ,{field:'user_faculty', title:'院系',unresize: true, minWidth:80,sort:true}
+                ,{field:'user_class', title:'班级',unresize: true, minWidth:100 ,sort:true}
+                ,{field:'clock_time', unresize: true,title:'打卡时间'}
+                ,{field:'clock_time_type', title:'时间段'}
+                ,{field:'clock_area', title:'位置' ,unresize: true}
+                ,{field:'temperature', title:'体温',unresize: true,templet: '#temperature_state',align:'center'}
+                ,{field:'cough', title:'咳嗽',unresize: true,templet: '#cough_state',align:'center'}
+                ,{field:'fever', title:'发烧',unresize: true,templet: '#fever_state',align:'center'}
+            ]]
+            ,page: true
+        });
+
+        //添加
+        table.on('toolbar(test)', function(obj){
+
+            switch(obj.event){
+                case 'add':
+                    layer.open({
+                        type: 2,
+                        content: 'clock_add.html',
+                        area: ['800px', '500px'],
+                        title: false,
+                        btn: ['确定', "取消"],
+                        yes: function (index, layero) {
+                            const iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'user-add-save'
+                                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                const field = data.field; //获取提交的字段
+
+                                $.ajax({
+                                    url:'/clock/stu/doclock',
+                                    type: 'POST',
+                                    data: field,
+                                    success: function (res){
+                                        if (res.code === 200) {
+                                            tableIns.reload();
+                                            layer.close(index);
+                                            layer.msg('添加成功');
+                                        } else {
+                                            layer.msg('添加失败');
+                                        }
+                                    },
+                                    error: function (error){
+                                        layer.msg('添加失败');
+                                    }
+                                });
+                            });
+
+                            submit.trigger('click');
+                        }
+                    });
+                    break;
+            }
+        });
+    });
+</script>
+<script type="text/html" id="cough_state" th:inline="none">
+    {{#  if(d.cough === '无'){ }}
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">{{ d.cough }}</button>
+    {{#  } else if(d.cough === '有'){ }}
+    <button type="button" class="layui-btn  layui-btn-danger  layui-btn-xs">{{ d.cough }}</button>
+    {{#  }else{ }}
+    {{#  } }}
+
+</script>
+<script type="text/html" id="fever_state" th:inline="none">
+    {{#  if(d.fever === '无'){ }}
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">{{ d.fever }}</button>
+    {{#  } else if(d.fever === '有'){ }}
+    <button type="button" class="layui-btn  layui-btn-danger  layui-btn-xs">{{ d.fever }}</button>
+    {{#  }else{ }}
+    {{#  } }}
+
+</script>
+<script type="text/html" id="temperature_state" th:inline="none">
+    {{#  if(d.temperature < 37.2){ }}
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">{{ d.temperature }}</button>
+    {{#  } else if(d.temperature > 37.2){ }}
+    <button type="button" class="layui-btn  layui-btn-danger  layui-btn-xs">{{ d.temperature }}</button>
+    {{#  }else{ }}
+    {{#  } }}
+
+</script>
+</body>
+</html>

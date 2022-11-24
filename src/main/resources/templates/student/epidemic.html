@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/layui/css/soulTable.css" media="all">
+    <title>Title</title>
+</head>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<script src="/assets/js/jquery.js"></script>
+<script src="/js/echarts.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<body>
+
+<div class="layui-row" >
+    <div class="layui-col-xs12 layui-col-md8" style="padding-top: 30px">
+        <div class="grid-demo grid-demo-bg1">
+            <div >
+                <div class="layui-row layui-col-space15" style="padding-left: 10px;padding-right: 10px">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_localConfirm_add">较上日</div>
+                                <div id="g_localConfirm"></div>
+                                <div >本土现有确诊</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_nowConfirm_add"></div>
+                                <div id="g_nowConfirm"></div>
+                                <div>现有确诊</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_confirm_add"></div>
+                                <div id="g_confirm"></div>
+                                <div>累计确诊 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-col-space15 "style="padding-left: 10px;padding-right: 10px">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_wzz_add"></div>
+                                <div id="g_wzz"></div>
+                                <div>无症状感染者</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_importedCase_add"></div>
+                                <div id="g_importedCase"></div>
+                                <div>境外输入</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-body layui-bg-gray" style="height: 100px">
+                                <div id="g_dead_add"></div>
+                                <div id="g_dead"></div>
+                                <div>累计死亡</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-col-xs6 layui-col-md4" style="padding-top: 20px">
+        <div class="grid-demo" style="padding-left: 10px;padding-right:10px">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+        </div>
+    </div>
+<!--    <div class="layui-col-xs6 layui-col-md12" style="padding-top: 20px">-->
+<!--        <div class="grid-demo" style="padding-left: 10px;padding-right:10px">-->
+<!--            -->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="layui-col-xs6 layui-col-md12">
+        <div class="grid-demo grid-demo-bg2">
+            <table class="layui-hide" id="myTable2" lay-filter="myTable2"></table>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+</body>
+<script th:inline="none">
+    layui.use('table', function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        table.render({
+            height: 255
+            ,elem: '#test'
+            ,id:'test'
+            ,title: '信息'
+
+            ,response: {
+                statusName: 'code' //规定数据状态的字段名称，默认：code
+                ,statusCode: 200 //规定成功的状态码，默认：0
+            }
+            ,parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "data": res.newslist[0].news //解析数据列表
+                };
+            }
+            ,url:'http://api.tianapi.com/ncov/index?key=d334721cf6eba2d619a5855420ec352c'
+            ,skin:'nob'
+            ,cols: [[
+                {field:'title',title:'标题',fixed:'left',event:'detail',style:'cursor: pointer;',unresize: true}
+                ,{field:'pubDateStr',fixed:'right',unresize: true,align:'right'}
+            ]]
+        });
+
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            layer.open({
+                type: 2,
+                title: '新闻',
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['893px', '600px'],
+                content: data.sourceUrl
+            });
+        });
+    });
+</script>
+<script th:inline="none">
+    $(function () {
+        $.ajax({
+            url: '/epmc/select/g',
+            type: 'POST',
+            dataType: "json",
+            success: function (res) {
+                document.getElementById("g_localConfirm_add").innerHTML =  "较上日"+"+"+res.data.g_localConfirm_add;
+                document.getElementById("g_localConfirm").innerHTML = res.data.g_localConfirm;
+                document.getElementById("g_nowConfirm_add").innerHTML =  "较上日"+"+"+res.data.g_nowConfirm_add;
+                document.getElementById("g_nowConfirm").innerHTML =  res.data.g_nowConfirm;
+                document.getElementById("g_confirm_add").innerHTML =  "较上日"+"+"+res.data.g_confirm_add;
+                document.getElementById("g_confirm").innerHTML =  res.data.g_confirm;
+                document.getElementById("g_wzz_add").innerHTML =  "较上日"+"+"+res.data.g_wzz_add;
+                document.getElementById("g_wzz").innerHTML =  res.data.g_wzz;
+                document.getElementById("g_importedCase_add").innerHTML =  "较上日"+"+"+res.data.g_importedCase_add;
+                document.getElementById("g_importedCase").innerHTML =  res.data.g_importedCase;
+                document.getElementById("g_dead_add").innerHTML =  "较上日"+"+"+res.data.g_dead_add;
+                document.getElementById("g_dead").innerHTML =  res.data.g_dead;
+            }
+        });
+    })
+</script>
+<script th:inline="none">
+    // 自定义模块，这里只需要开放soulTable即可
+    layui.config({
+        base: '../layui/lay/modules/'
+    }).extend({
+        tableChild: 'tableChild'
+    });
+    layui.use(['form', 'table','tableChild'], function () {
+        var table = layui.table,
+            tableChild = layui.tableChild;
+
+        table.render({
+            elem: '#myTable2'
+            ,url: '/epmc/select/p'
+            ,height: 500
+            ,page: false
+            ,cols: [[
+                {title: '#', childTitle: false, width: 50, children: function(row) {
+                        console.log(row)
+                        return [
+                            {
+                                url: '/epmc/select/c'
+                                ,height: 300
+                                ,where:{p_name:row.p_name}
+                                ,page: false
+                                ,cols: [[
+                                    {field: 'c_name', title: '城市',unrezise:'true'},
+                                    {field: 'c_today_confirm', title: '新增确诊',unrezise:'true'},
+                                    {field: 'c_total_nowConfirm', title: '现有确诊',unrezise:'true'},
+                                    {field: 'c_total_wzz', title: '新增无症状',unrezise:'true'},
+                                    {field: 'c_total_confirm', title: '现有确诊',unrezise:'true'},
+                                    {field: 'c_total_dead', title: '累计死亡',unrezise:'true'},
+                                    {field: 'c_total_heal', title: '累计治愈',unrezise:'true'},
+                                ]]
+                                ,done: function () {
+                                    tableChild.render(this);
+                                }
+                            }
+                        ]
+                    }},
+                {field: 'p_name', title: '地区',unrezise:'true'},
+                {field: 'p_total_nowConfirm', title: '现有确诊',unrezise:'true'},
+                {field: 'p_total_wzz', title: '现有无症状',unrezise:'true'},
+                {field: 'p_total_confirm', title: '累计确诊',unrezise:'true'},
+                {field: 'p_total_dead', title: '累计死亡',unrezise:'true'},
+                {field: 'p_total_heal', title: '累计治愈',unrezise:'true'},
+                {field: 'p_today_confirm', title: '新增确诊',unrezise:'true'},
+                {field: 'p_today_wzz_add', title: '新增无症状',  fixed:'right',unrezise:'true'},
+            ]]
+            ,done: function () {
+                tableChild.render(this)
+            }
+        });
+    })
+</script>
+<script>
+    //Hash地址的定位
+    var layid = location.hash.replace(/^#test=/, '');
+    element.tabChange('test', layid);
+
+    element.on('tab(test)', function(elem){
+        location.hash = 'test='+ $(this).attr('lay-id');
+    });
+</script>
+</html>
