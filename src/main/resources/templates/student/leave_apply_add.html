@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<body>
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>审核信息</legend>
+    </fieldset>
+
+    <form class="layui-form layui-form-pane" action="">
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">原因</label>
+            <div class="layui-input-block">
+                <textarea id="reason" name="reason" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">行程</label>
+            <div class="layui-input-inline">
+                <input id="travel" type="text" name="travel" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">离校时间</label>
+            <div class="layui-input-inline">
+                <input id="leave_time" type="text" name="leave_time" class="layui-input"  placeholder="yyyy-MM-dd">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">返校时间</label>
+            <div class="layui-input-inline">
+                <input id="back_time" type="text" name="back_time" class="layui-input"  placeholder="yyyy-MM-dd">
+            </div>
+        </div>
+        <div class="layui-form-item layui-hide">
+            <button type="button" lay-submit="" lay-filter="user-add-save" id="user-add-save" class="layui-btn">
+                确认
+            </button>
+        </div>
+    </form>
+
+
+</div>
+<script src="/layui/layui.all.js"></script>
+
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //年月选择器
+        laydate.render({
+            elem: '#leave_time'
+            ,trigger:'click'
+        });
+    });
+</script>
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //年月选择器
+        laydate.render({
+            elem: '#back_time'
+            ,trigger:'click'
+        });
+    });
+</script>
+</body>
+</html>

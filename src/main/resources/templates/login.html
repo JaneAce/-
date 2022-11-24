@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园疫情管理系统</title>
+    <link href="/css/login.css" rel="stylesheet">
+    <link href="/css/dialog.css" rel="stylesheet">
+    <script src="/js/dialog.js"></script>
+    <style>
+        .input-item {
+            margin-bottom: 20px;
+            font-size: 15px;
+            width: 352px;
+            height: 48px;
+            outline: none;
+            background: #ffffff;
+            border: 1px solid #e3e8f0;
+            -webkit-border-radius: 24px;
+            border-radius: 24px;
+            color: #181E33;
+            padding: 0 24px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .input-item:focus {
+            border: 1px solid #abc1ee;
+        }
+        .btn {
+            border: none;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            border-radius: 24px;
+            margin-top: 40px;
+            background-image: linear-gradient(to right, #a6c1ee, #1b6f9d);
+            color: #fff;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div class="container">
+    <div class="login-wrapper">
+        <div class="header">校园疫情管理系统</div>
+        <div class="form-wrapper">
+            <form id="f_sub" name="f"  action="/loginIn" method="post">
+                <input type="text" name="username" placeholder="请输入用户名" class="input-item">
+                <input type="password" name="password" placeholder="请输入密码" class="input-item">
+                <input type="text" name="VerifyCode" placeholder="请输入验证码" class="input-item">
+                <img src="/Captcha"> <a href="/login">看不清？换一张</a>
+                <button class="btn" type="submit" style="cursor: pointer">登录</button>
+            </form>
+            <a href="/signup">没有账号？去注册</a>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+        var login_err=[[${login_err}]]
+        var verify_err=[[${verify_err}]]
+        if (login_err === "账号或者密码错误"){
+            Dialog.init("账号或者密码错误")
+        }else if (verify_err==="验证码错误"){
+            Dialog.init("验证码错误")
+
+    }
+</script>
+
+</body>
+</html>

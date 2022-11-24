@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Title</title>
+</head>
+<script src="/assets/js/jquery.js"></script>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<link href="/css/dialog.css" rel="stylesheet">
+<script src="/js/dialog.js"></script>
+<body>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>审核信息</legend>
+</fieldset>
+<form class="layui-form" action="/student/SupplyMyInfo" id="form_sub" lay-filter="test">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_name" name="username"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像<span style=" color: red;">*</span></label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn upload-demoMore" id="btnUploadImage"><i class="layui-icon">&#xe67c;</i>上传图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="stu_photo" name="stu_photo" style="width: 300px ; height: 200px ;border: #9F9F9F">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址</label>
+        <div class="layui-input-block">
+            <input type="text" id="stu_address" name="address"  autocomplete="off"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-inline">
+                <input type="date" id="stu_birth" name="birtherDay"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_sex" name="sex"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_phone" name="phoneNo"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_email" name="stu_email"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">院系</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_faculty" name="academyName"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">班级</label>
+            <div class="layui-input-inline">
+                <input type="text" id="stu_class" name="className"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="layui-btn" lay-submit id="btnSubmit" style="margin-left: 110px" lay-filter="btnSubmit">保存</button>
+
+</form>
+
+<script th:inline="javascript">
+   var stu_address=document.getElementById("stu_address").value;
+   var stu_birth=document.getElementById("stu_birth").value;
+   var stu_sex=document.getElementById("stu_sex").value;
+   var stu_phone=document.getElementById("stu_phone").value;
+   var stu_faculty=document.getElementById("stu_faculty").value;
+   var stu_class=document.getElementById("stu_class").value;
+   if (stu_address===""||stu_birth===""||stu_sex===""||stu_phone===""||stu_faculty===""||stu_class===""){
+       Dialog.init("请完善个人信息")
+   }
+   var item = localStorage.getItem("user");
+   document.getElementById("stu_name").value=item
+    function GetPersonInfo(){
+
+        $.ajax({
+            url: "/student/GetMyInfo?username="+item,
+            method:"get",
+            success:function (data){
+                var obj = new Object(data);
+                var jsonData = JSON.stringify(obj);
+                var parse = JSON.parse(jsonData);
+                document.getElementById("stu_name").value=parse["username"]
+                document.getElementById("stu_email").value=parse["emailNo"]
+                document.getElementById("stu_address").value=parse["address"]
+                document.getElementById("stu_sex").value=parse["sex"]
+                document.getElementById("stu_phone").value=parse["phoneNo"]
+                document.getElementById("stu_faculty").value=parse["academyName"]
+                document.getElementById("stu_class").value=parse["className"]
+                document.getElementById("stu_birth").value=parse["birtherDay"]
+
+        }
+        })
+    }
+    GetPersonInfo()
+</script>
+
+<script>
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+
+</html>

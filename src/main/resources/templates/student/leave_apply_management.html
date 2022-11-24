@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <title>Title</title>
+</head>
+<body>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-input-inline layui-form-item" id="add">
+        <div class="layui-inline">
+            <button type="button" class="layui-btn" lay-event="add">添加</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <!--    //删除按钮-->
+    <a class=" layui-btn-sm" style="cursor: pointer" lay-event="del" >
+        <i class="layui-icon layui-icon-delete" style="font-size: 30px; color: #979494;"></i>
+    </a>
+
+</script>
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        var layer = layui.layer;
+        var $ = layui.$
+        const tableIns = table.render({
+            elem: '#test'
+            ,id:'test'
+            ,url:'/leave/stu/select'
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,response: {
+                statusName: 'code' //规定数据状态的字段名称，默认：code
+                ,statusCode: 200 //规定成功的状态码，默认：0
+            }
+            ,title: '用户数据表'
+
+            ,cols: [[
+                {field:'apply_id', title:'ID', minWidth:30,  fixed: 'left', unresize: true, sort: true}
+                ,{field:'stu_id', title:'学号', minWidth:120}
+                ,{field:'stu_name', title:'姓名', minWidth:150}
+                ,{field:'stu_faculty', title:'院系', minWidth:80,sort:true}
+                ,{field:'stu_class', title:'班级', minWidth:100 ,sort:true}
+                ,{field:'reason', title:'原因',}
+                ,{field:'travel', title:'行程',}
+                ,{field:'leave_time', title:'离校时间',}
+                ,{field:'back_time', title:'返校时间',align:'center'}
+                ,{field:'apply_state', title:'状态',templet: '#state',align:'center'}
+                ,{field: 'right', title:'操作', toolbar: '#barDemo', width:150, align:'center' ,fixed: 'right'}
+            ]]
+            ,page: true
+        });
+
+        //添加
+        table.on('toolbar(test)', function(obj){
+            switch(obj.event){
+                case 'add':
+                    layer.open({
+                        type: 2,
+                        content: 'leave_apply_add.html',
+                        area: ['800px', '500px'],
+                        title: false,
+                        btn: ['确定', "取消"],
+                        yes: function (index, layero) {
+                            const iframeWindow = window['layui-layer-iframe' + index]
+                                , submitID = 'user-add-save'
+                                , submit = layero.find('iframe').contents().find('#' + submitID);
+
+                            //监听提交
+                            iframeWindow.layui.form.on('submit(' + submitID + ')', function (data) {
+                                const field = data.field; //获取提交的字段
+
+                                $.ajax({
+                                    url:'/leave/stu/add',
+                                    type: 'POST',
+                                    data: field,
+                                    success: function (res){
+                                        if (res.code === 200) {
+                                            tableIns.reload();
+                                            layer.close(index);
+                                            layer.msg('添加成功');
+                                        } else {
+                                            layer.msg('添加失败');
+                                        }
+                                    },
+                                    error: function (error){
+                                        layer.msg('添加失败');
+                                    }
+                                });
+                            });
+
+                            submit.trigger('click');
+                        }
+                    });
+                    break;
+            }
+        });
+
+        //监听行工具事件 审核，删除
+        table.on('tool(test)', function(obj){
+            var data = obj.data;
+            if (obj.event === 'del') { //删除
+                layer.confirm('真的删除行么', function (index) {
+                    // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url: '/leave/admin/delete',
+                        type: 'POST',
+                        data: {'apply_id': data.apply_id},
+                        success: function (res) {
+                            console.log(res);
+                            layer.close(index);
+                            if (res.code === 200) {
+                                layer.msg('删除成功');
+                                tableIns.reload();
+                            } else {
+                                layer.msg('删除失败');
+                            }
+                        },
+                        error: function (error) {
+                            layer.close(index)
+                            layer.msg('http请求错误')
+                        }
+                    });
+                });
+            }
+            function render_form(layero, index, data) {
+                const body = layer.getChildFrame('body' , index);
+                body.find('#apply_id').val(data.apply_id);
+                body.find('#stu_id').val(data.stu_id);
+                body.find('#stu_name').val(data.stu_name);
+                body.find('#stu_faculty').val(data.stu_faculty);
+                body.find('#stu_class').val(data.stu_class);
+                body.find('#reason').val(data.reason);
+                body.find('#travel').val(data.travel);
+                body.find('#leave_time').val(data.leave_time);
+                body.find('#back_time').val(data.back_time);
+            }
+        });
+
+
+
+    });
+</script>
+<script type="text/html" id="state">
+    {{#  if(d.apply_state === '通过'){ }}
+    <button type="button" class="layui-btn  layui-btn-xs">{{ d.apply_state }}</button>
+    {{#  } else if(d.apply_state === '拒绝'){ }}
+    <button type="button" class="layui-btn  layui-btn-danger  layui-btn-xs">{{ d.apply_state }}</button>
+    {{#  }else{ }}
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">{{ d.apply_state }}</button>
+    {{#  } }}
+
+</script>
+</body>
+</html>
